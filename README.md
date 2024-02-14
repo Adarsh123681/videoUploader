@@ -1,0 +1,1 @@
+This project leverages HTML, CSS, and JavaScript to create a dynamic user interface where elements can be dragged and dropped within a designated area. Drag and drop functionality adds interactivity and enhances the user experience by allowing users to manipulate elements easily.
