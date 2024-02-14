@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Upload</title>
+  <!-- Include Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-200">
+  <div class="container mx-auto mt-8">
+    <h1 class="text-3xl font-bold mb-4">Video Upload</h1>
+    <div id="dropArea" class="border-dashed border-2 border-gray-400 p-8 mb-4">
+      <p class="text-gray-500">Drag and drop your video file here</p>
+    </div>
+    <div id="message"></div>
+  </div>
+
+  <!-- Include Tailwind CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
+
+  <script>
+    // Drag and drop functionality
+    var dropArea = document.getElementById('dropArea');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    dropArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+      var dt = e.dataTransfer;
+      var files = dt.files;
+
+      handleFiles(files);
+    }
+
+    // File handling
+    function handleFiles(files) {
+      var formData = new FormData();
+      formData.append('video', files[0]);
+
+      uploadFile(formData);
+    }
+
+    // Upload function
+    function uploadFile(formData) {
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error('Failed to upload video');
+          }
+        })
+        .then(data => {
+          document.getElementById('message').innerHTML = '<div class="text-green-600">Video uploaded successfully</div>';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('message').innerHTML = '<div class="text-red-600">Failed to upload video</div>';
+        });
+    }
+  </script>
+</body>
+
+</html>
