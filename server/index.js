@@ -65,7 +65,23 @@ app.post("/logout", async (req, res) => {
   res.send("user log out sucessfully...");
 });
 
-app.post("/uploadVideo", (req, res) => {});
+app.post("/uploadVideo", (req, res) => {
+  const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/videos'); // Destination folder for uploaded videos
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('video'), (req, res) => {
+  // If the file is successfully uploaded, send a success response
+  res.send('Video uploaded successfully');
+});
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
